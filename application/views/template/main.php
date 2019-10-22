@@ -59,7 +59,7 @@
 
                             foreach ($submenu->result() as $sub) {
                                 echo '<li>
-											<a href="' . $sub->link . '">
+											<a href="' . base_url() . $sub->link . '">
 												<i class="material-icons">' . $sub->icon . '</i>
 												<p>' . $sub->judul_menu . '</p>
 											</a>
