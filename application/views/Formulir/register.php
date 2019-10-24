@@ -41,8 +41,8 @@
                                             <div class="col-lg-9 col-md-6 col-sm-3">
                                                 <select class="selectpicker" data-style="select-with-transition" title="Fakultas" id="fakultas" name="fakultas">
                                                     <option disabled>Pilih Fakultas</option>
-                                                    <?php foreach ($fakultas->result() as $row) : ?>
-                                                        <option value="<?= $row->idfakultas ?>"><?= $row->namafakultas ?></option>
+                                                    <?php foreach ($fakultas as $list) : ?>
+                                                        <option value="<?= $list->idfakultas ?>"><?= $list->namafakultas ?></option>
                                                     <?php endforeach ?>
                                                 </select>
                                             </div>
@@ -176,26 +176,30 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function() {
+        var url = 'http://localhost/puslitan/Formulir/register';
+
         $('#fakultas').change(function() {
             var id = $(this).val();
-            $.ajax({
-                url = "<?= base_url(); ?>/Formulir/register",
-                method: "POST",
-                dataType: "JSON",
-                data: {
-                    id: id
-                },
-                success: function() {
-                    var html = '';
-                    for (let index = 0; index < array.length; index++) {
-                        html += "<option>" + array[index].namajurusan + "</option>"
-                    }
-                    $('#jurusan').html(html);
+            // alert(id)
+            var data = {
+                id: id
+            };
+            $.post(url, data, function(r) {
+                var html = '';
+                for (let index = 0; index < r.length; index++) {
+                    html += '<option value="' + r[index].idjurusan + '">' + r[index].namajurusan + '</option>';
+
                 }
-            })
-        })
-    })
+                $('#jurusan').html(html);
+
+            }, 'JSON');
+        });
+    });
 </script>
