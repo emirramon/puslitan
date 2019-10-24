@@ -39,31 +39,14 @@
                                                 <i class="material-icons">business</i>
                                             </span>
                                             <div class="col-lg-9 col-md-6 col-sm-3">
-                                                <select class="selectpicker" data-style="select-with-transition" title="Fakultas" onchange="stateValue(this.value)" name="fakultas">
+                                                <select class="selectpicker" data-style="select-with-transition" title="Fakultas" id="fakultas" name="fakultas">
                                                     <option disabled>Pilih Fakultas</option>
-                                                    <?php
-                                                    $select = 'select * from fakultas';
-                                                    $select2 = $this->db->query($select)->result();
-                                                    foreach ($select2 as $data) {
-                                                        echo '<option value="' . $data->idfakultas . '"> ' . $data->namafakultas . ' </option>';
-                                                    }
-
-                                                    ?>
+                                                    <?php foreach ($fakultas->result() as $row) : ?>
+                                                        <option value="<?= $row->idfakultas ?>"><?= $row->namafakultas ?></option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
                                         </div>
-                                        <script>
-                                            function stateValue(val) {
-                                                $.ajax({
-                                                    type: "post",
-                                                    url: "register.php",
-                                                    data: "idfakultas" + val,
-                                                    success: function(data) {
-                                                        $("#jurusan").html(data);
-                                                    }
-                                                });
-                                            }
-                                        </script>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">business</i>
@@ -71,20 +54,6 @@
                                             <div class="col-lg-9 col-md-6 col-sm-3">
                                                 <select class="selectpicker" data-style="select-with-transition" title="Jurusan" id="jurusan" name="jurusan">
                                                     <option disabled>Pilih Jurusan</option>
-                                                    <?php
-                                                    if (!empty($_POST["idfakultas"])) {
-                                                        $query = "select * from jurusan where idfakultas = '" . $_POST["idfakultas"] . "'";
-                                                        $result = $this->db->fetchData($query);
-                                                        ?>
-                                                        <option value="">Pilih Jurusan</option>
-                                                        <?php foreach ($result as $jurusan) {
-                                                                ?>
-                                                            <option value="<?= $jurusan['idjurusan']; ?>"><?php echo $jurusan['namajurusan']; ?></option>
-                                                    <?php
-                                                        }
-                                                    }
-                                                    ?>
-
                                                 </select>
                                             </div>
                                         </div>
@@ -205,16 +174,28 @@
                 </div>
             </div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <p class="copyright pull-right">
-                    &copy;
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script>
-                    <a href="">LPPM UIN Suska Riau</a>, Pusat Penelitian dan Penerbitan
-                </p>
-            </div>
-        </footer>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#fakultas').change(function() {
+            var id = $(this).val();
+            $.ajax({
+                url = "<?= base_url(); ?>/Formulir/register",
+                method: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                success: function() {
+                    var html = '';
+                    for (let index = 0; index < array.length; index++) {
+                        html += "<option>" + array[index].namajurusan + "</option>"
+                    }
+                    $('#jurusan').html(html);
+                }
+            })
+        })
+    })
+</script>
