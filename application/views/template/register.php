@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url() ?>assets/img/apple-icon.png" />
-    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/img/favicon.png" />
+    <link rel="icon" type="image/png" href="<?= base_url(); ?>/assets/img/logouin.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Sistem Surat Ushuluddin</title>
+    <title>Pusat Penelitian dan Penerbitan LPPM UIN Suska Riau</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body class="off-canvas-sidebar">
+<body class="page-top">
 
     <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
         <div class="container">
@@ -32,28 +32,34 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href=" <?= site_url('login') ?>">Sistem Surat Ushuluddin</a>
+                <a class="navbar-brand" href=" <?= site_url('daftar') ?>">Pusat Penelitian dan Penerbitan</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-
-                    <li class="  ">
-                        <a href="<?= site_url('login/daftar') ?>">
-                            <i class="material-icons">person_add</i> Register
+                    <li>
+                        <a href="<?= base_url(); ?>Home/index">
+                            <i class="material-icons">dashboard</i> Beranda
                         </a>
                     </li>
-                    <li class="  ">
-                        <a href="<?= site_url('login') ?>">
-                            <i class="material-icons">fingerprint</i> Login
+                    <li class=" active ">
+                        <a href="<?= base_url(); ?>Formulir/register">
+                            <i class="material-icons">person_add</i> Daftar
                         </a>
                     </li>
-
+                    <li class=" ">
+                        <a href="<?= base_url(); ?>Formulir/login">
+                            <i class="material-icons">fingerprint</i> Masuk
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+
     <?= $contents ?>
+
+
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <!-- Latest compiled and minified JavaScript -->

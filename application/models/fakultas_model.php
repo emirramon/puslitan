@@ -18,4 +18,19 @@ class fakultas_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_pangkat()
+    {
+        $this->db->from('pangkat');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_golongan($id)
+    {
+        $this->db->from('golongan');
+        $this->db->where('idpangkat', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
