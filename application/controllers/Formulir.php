@@ -43,7 +43,7 @@ class Formulir extends CI_Controller
 				'nip' => $this->input->post('nip'),
 				'nama' => $this->input->post('nama'),
 				'tempatlahir' => $this->input->post('tempat'),
-				'tanggallahir' => $this->input->post('tanggal'),
+				'tanggallahir' => date("Y-m-d", strtotime($this->input->post('tanggal'))),
 				'fakultas' => $this->input->post('fakultas'),
 				'jurusan' => $this->input->post('jurusan'),
 				'pangkat' => $this->input->post('pangkat'),
@@ -63,9 +63,9 @@ class Formulir extends CI_Controller
 				'level' => 'dosen'
 			];
 
+			
 			$this->db->insert('dosen', $data);
 			$this->db->insert('akun', $data2);
-
 			redirect('Formulir/login');
 		}
 	}
