@@ -37,17 +37,17 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="<?= base_url(); ?>Home/index">
+                        <a href="<?= base_url(); ?>Home">
                             <i class="material-icons">dashboard</i> Beranda
                         </a>
                     </li>
                     <li class=" active ">
-                        <a href="<?= base_url(); ?>Formulir/register">
+                        <a href="<?= base_url(); ?>Auth/register">
                             <i class="material-icons">person_add</i> Daftar
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="<?= base_url(); ?>Formulir/login">
+                        <a href="<?= base_url(); ?>Auth">
                             <i class="material-icons">fingerprint</i> Masuk
                         </a>
                     </li>

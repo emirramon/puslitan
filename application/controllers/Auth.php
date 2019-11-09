@@ -1,27 +1,30 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Formulir extends CI_Controller
+class Auth extends CI_Controller
 {
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('fakultas_model');
-		$this->load->library('form_validation');
 	}
 
-	public function login()
+	public function index()
 	{
+		$nip = $this->session->userdata('nip');
+		if (!empty($nip)) {
+			redirect('Home');
+		}
 		$this->form_validation->set_rules('nip', 'NIP/NIK', 'required|trim');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required');
 		if ($this->form_validation->run() == false) {
-			$this->template->load('template/login', 'Formulir/login');
+			$this->template->load('template/login', 'Auth/login');
 		} else {
-			$this->_auth();
+			$this->_verify();
 		}
 	}
 
-	private function _auth()
+	private function _verify()
 	{
 		$nip = $this->input->post('nip');
 		$password = $this->input->post('password');
@@ -37,7 +40,7 @@ class Formulir extends CI_Controller
 				if (password_verify($password, $user['password'])) {
 					//login berhasil
 					$data = [
-						'akun' => $user['nip'],
+						'nip' => $user['nip'],
 						'level' => $user['level']
 					];
 					$this->session->set_userdata($data);
@@ -45,17 +48,17 @@ class Formulir extends CI_Controller
 				} else {
 					$this->session->set_flashdata('message', '<div class="alert alert-danger">
 				<span><b>Maaf password anda salah</span></div>');
-					redirect('Formulir/login');
+					redirect('Auth');
 				}
 			} else {
 				$this->session->set_flashdata('message', '<div class="alert alert-danger">
 				<span><b>NIP ini belum di aktifkan</span></div>');
-				redirect('Formulir/login');
+				redirect('Auth');
 			}
 		} else {
 			$this->session->set_flashdata('message', '<div class="alert alert-danger">
 			<span><b>NIP tidak terdaftar</span></div>');
-			redirect('Formulir/login');
+			redirect('Auth');
 		}
 	}
 
@@ -81,13 +84,13 @@ class Formulir extends CI_Controller
 
 			$data['pangkat'] = $this->db->get('pangkat')->result();
 
-			$this->template->load('template/register', 'Formulir/register', $data);
+			$this->template->load('template/register', 'Auth/register', $data);
 		} else {
 			$data = [
-				'nip' => htmlspecialchars($this->input->post('nip', true)),
-				'nama' => htmlspecialchars($this->input->post('nama', true)),
-				'tempatlahir' => htmlspecialchars($this->input->post('tempat', true)),
-				'tanggallahir' => $this->input->post('tanggal'),
+				'nip' => htmlspecialchars($this->input->post('nip'), true),
+				'nama' => htmlspecialchars($this->input->post('nama'), true),
+				'tempatlahir' => htmlspecialchars($this->input->post('tempat'), true),
+				'tanggallahir' => date("Y-m-d", strtotime($this->input->post('tanggal'))),
 				'fakultas' => $this->input->post('fakultas'),
 				'jurusan' => $this->input->post('jurusan'),
 				'pangkat' => $this->input->post('pangkat'),
@@ -104,9 +107,10 @@ class Formulir extends CI_Controller
 			$data2 = [
 				'nip' => $this->input->post('nip'),
 				'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-				'level' => 'dosen',
+				'level' => 1,
 				'is_active' => 0
 			];
+
 
 			$this->db->insert('dosen', $data);
 			$this->db->insert('akun', $data2);
@@ -115,8 +119,20 @@ class Formulir extends CI_Controller
 			<span>
 				<b>Berhasil Mendaftar Silahkan Login</span>
 		</div>');
-			redirect('Formulir/login');
+			redirect('Auth');
 		}
+	}
+
+	public function logout()
+	{
+		$this->session->unset_userdata('nip');
+		$this->session->unset_userdata('level');
+
+		$this->session->set_flashdata('message', '<div class="alert alert-success">
+			<span>
+				<b>Selamat anda berhasil logout</span>
+		</div>');
+		redirect('Auth');
 	}
 
 	public function getjurusan()

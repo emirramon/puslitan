@@ -43,50 +43,233 @@
                 </a>
             </div>
             <div class="sidebar-wrapper">
+                <?php
+                $session = $this->session->userdata('nip');
+                if (!empty($session)) : ?>
+                    <?php if ($this->session->userdata('nip') == 'Administrator') : ?>
+                        <div class="user">
+                            <div class="photo">
+                                <img src="<?= base_url(); ?>assets/img/faces/avatar.jpg" />
+                            </div>
+                            <div class="info">
+                                <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                                    <span>
+                                        <?= $this->session->userdata('nip'); ?>
+                                        <b class="caret"></b>
+                                    </span>
+                                </a>
+                                <div class="clearfix"></div>
+                                <div class="collapse" id="collapseExample">
+                                    <ul class="nav">
+                                        <li>
+                                            <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                                                <span class="sidebar-mini">L</span>
+                                                <span class="sidebar-normal">Logout</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    <?php else : ?>
+                        <div class="user">
+                            <div class="photo">
+                                <img src="<?= base_url(); ?>assets/img/faces/avatar.jpg" />
+                            </div>
+                            <div class="info">
+                                <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                                    <span>
+                                        <?php
+                                                $session = $this->session->userdata('nip');
+                                                $nama = "SELECT * FROM `DOSEN`
+                                                    WHERE `nip` = $session";
+                                                $result = $this->db->query($nama)->result_array();
+                                                foreach ($result as $r) {
+                                                    $nama2 = $r['nama'];
+                                                } ?>
+                                        <?= $nama2 ?>
+                                        <b class="caret"></b>
+                                    </span>
+                                </a>
+                                <div class="clearfix"></div>
+                                <div class="collapse" id="collapseExample">
+                                    <ul class="nav">
+                                        <li>
+                                            <a href="#">
+                                                <span class="sidebar-mini">MP</span>
+                                                <span class="sidebar-normal">My Profile</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <span class="sidebar-mini">EP</span>
+                                                <span class="sidebar-normal">Edit Profile</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                                                <span class="sidebar-mini">L</span>
+                                                <span class="sidebar-normal">Logout</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
-                <ul class="nav">
-                    <?php
 
-                    $sql_menu = "SELECT * FROM menu WHERE induk_menu=0";
-                    $main_menu = $this->db->query($sql_menu)->result();
-                    foreach ($main_menu as $main) {
-                        $submenu = $this->db->get_where('menu', array('induk_menu' => $main->id));
-                        if ($submenu->num_rows() > 0) {
-                            echo '<li>
-									<a data-toggle="collapse" href="#' . $main->link . '">
-										<i class="material-icons">image</i>
-										<p>' . $main->judul_menu . '
-											<b class="caret"></b>
-										</p>
-									</a>
-									<div class="collapse" id="' . $main->link . '">
-										<ul class="nav">';
-
-                            foreach ($submenu->result() as $sub) {
-                                echo '<li>
-											<a href="' . base_url() . $sub->link . '">
-												<i class="material-icons">' . $sub->icon . '</i>
-												<p>' . $sub->judul_menu . '</p>
-											</a>
-										</li>';
+                    <ul class="nav">
+                        <?php
+                            //join tabel user menu dengan user access menu
+                            $level = $this->session->userdata('level');
+                            if ($level == '') {
+                                $level = 2;
                             }
+                            $query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
+                                    FROM `user_menu` JOIN `user_access_menu`
+                                    ON `user_menu`.`id` = `user_access_menu`.`menu_id`
+                                    WHERE `user_access_menu`.`level` = $level
+                                    ORDER BY `user_access_menu`.`menu_id` ASC
+                        ";
+                            $menu = $this->db->query($query)->result_array();
+                            ?>
 
-                            echo         '</ul>
-									</div>
-								</li>';
-                        } else {
-                            $link = base_url() . $main->link;
-                            echo '<li>
-									<a href="' . $link . '">
-										<i class="material-icons">' . $main->icon . '</i>
-										<p>' . $main->judul_menu . '</p>
-									</a>
-								</li>';
-                        }
-                    }
+                        <?php foreach ($menu as $m) : ?>
 
-                    ?>
-                </ul>
+                            <?php
+                                    $menuid = $m['id'];
+                                    $querysub = " SELECT * FROM `user_sub_menu`
+                                            WHERE `menu_id` = $menuid
+                                            AND `is_active` = 1
+                            ";
+                                    $submenu = $this->db->query($querysub)->result_array();
+                                    if (count($submenu) > 0) {
+                                        ?>
+                                <?php if ($m['title'] == $title) : ?>
+                                    <li class="active">
+                                    <?php else : ?>
+                                    <li>
+                                    <?php endif; ?>
+                                    <a data-toggle="collapse" href="#<?= $m['url']  ?>">
+                                        <i class="material-icons"><?= $m['icon'] ?></i>
+                                        <p><?= $m['title'] ?>
+                                            <b class="caret"></b>
+                                        </p>
+                                    </a>
+                                    <div class="collapse" id="<?= $m['url'] ?>">
+                                        <ul class="nav">
+                                            <?php foreach ($submenu as $sm) : ?>
+                                                <?php if ($sm['sub_title'] == $subtitle) : ?>
+                                                    <li class="active">
+                                                    <?php else : ?>
+                                                    <li>
+                                                    <?php endif; ?>
+                                                    <a href="<?= base_url($sm['url'])  ?>">
+                                                        <span class="sidebar-mini"><?= $sm['icon'] ?></span>
+                                                        <span class="sidebar-normal"><?= $sm['sub_title'] ?></span>
+                                                    </a>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                    </li>
+                                <?php
+                                        } else {
+                                            ?>
+                                    <?php if ($m['title'] == $title) : ?>
+                                        <li class="active">
+                                        <?php else : ?>
+                                        <li>
+                                        <?php endif; ?>
+                                        <a href="<?= base_url($m['url'])  ?>">
+                                            <i class="material-icons"><?= $m['icon'] ?></i>
+                                            <p><?= $m['title'] ?></p>
+                                        </a>
+                                        </li>
+                                    <?php
+                                            }
+                                            ?>
+
+                                <?php endforeach; ?>
+                    </ul>
+
+                <?php else : ?>
+                    <ul class="nav">
+                        <?php
+                            //join tabel user menu dengan user access menu
+                            $level = $this->session->userdata('level');
+                            if ($level == '') {
+                                $level = 2;
+                            }
+                            $query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
+                                    FROM `user_menu` JOIN `user_access_menu`
+                                    ON `user_menu`.`id` = `user_access_menu`.`menu_id`
+                                    WHERE `user_access_menu`.`level` = $level
+                                    ORDER BY `user_access_menu`.`menu_id` ASC
+                        ";
+                            $menu = $this->db->query($query)->result_array();
+                            ?>
+
+                        <?php foreach ($menu as $m) : ?>
+
+                            <?php
+                                    $menuid = $m['id'];
+                                    $querysub = " SELECT * FROM `user_sub_menu`
+                                            WHERE `menu_id` = $menuid
+                                            AND `is_active` = 1
+                            ";
+                                    $submenu = $this->db->query($querysub)->result_array();
+                                    if (count($submenu) > 0) {
+                                        ?>
+                                <?php if ($m['title'] == $title) : ?>
+                                    <li class="active">
+                                    <?php else : ?>
+                                    <li>
+                                    <?php endif; ?>
+                                    <a data-toggle="collapse" href="#<?= $m['url']  ?>">
+                                        <i class="material-icons"><?= $m['icon'] ?></i>
+                                        <p><?= $m['title'] ?>
+                                            <b class="caret"></b>
+                                        </p>
+                                    </a>
+                                    <div class="collapse" id="<?= $m['url'] ?>">
+                                        <ul class="nav">
+                                            <?php foreach ($submenu as $sm) : ?>
+                                                <?php if ($sm['sub_title'] == $subtitle) : ?>
+                                                    <li class="active">
+                                                    <?php else : ?>
+                                                    <li>
+                                                    <?php endif; ?>
+                                                    <a href="<?= base_url($sm['url'])  ?>">
+                                                        <span class="sidebar-mini"><?= $sm['icon'] ?></span>
+                                                        <span class="sidebar-normal"><?= $sm['sub_title'] ?></span>
+                                                    </a>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                    </li>
+                                <?php
+                                        } else {
+                                            ?>
+                                    <?php if ($m['title'] == $title) : ?>
+                                        <li class="active">
+                                        <?php else : ?>
+                                        <li>
+                                        <?php endif; ?>
+                                        <a href="<?= base_url($m['url'])  ?>">
+                                            <i class="material-icons"><?= $m['icon'] ?></i>
+                                            <p><?= $m['title'] ?></p>
+                                        </a>
+                                        </li>
+                                    <?php
+                                            }
+                                            ?>
+
+                                <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
 
             </div>
         </div>
@@ -128,6 +311,21 @@
         </div>
         </footer>
     </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModal">Apakah anda yakin ingin logout?</h5>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                    <a type="button" class="btn btn-primary" href="<?= base_url('Auth/logout'); ?>">Logout</a>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <!--   Core JS Files   -->

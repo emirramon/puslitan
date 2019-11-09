@@ -7,7 +7,7 @@
 						<h2 class="card-title text-center">Daftar</h2>
 						<div class="row">
 							<div class="col-lg-10 col-lg-offset-1">
-								<form class="form" method="post" action="<?= base_url('Formulir/register'); ?>">
+								<form class="form" method="post" action="<?= base_url('Auth/register'); ?>">
 									<div class="card-content">
 										<div class="input-group">
 											<span class="input-group-addon">
@@ -196,7 +196,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
 	$(document).ready(function() {
-		var url = 'http://localhost/puslitan/Formulir/getjurusan';
+		var url = 'http://localhost/puslitan/Auth/getjurusan';
 
 		$('#fakultas').change(function() {
 			var id = $(this).val();
@@ -217,7 +217,7 @@
 	});
 
 	$(document).ready(function() {
-		var url = 'http://localhost/puslitan/Formulir/getgolongan';
+		var url = 'http://localhost/puslitan/Auth/getgolongan';
 
 		$('#pangkat').change(function() {
 			var id = $(this).val();
@@ -241,7 +241,7 @@
 
 		$('.datepicker').datetimepicker({
 			defaultDate: new Date(),
-			format: 'DD/MM/YYYY'
+			format: 'YYYY/MM/DD'
 		});
 	});
 </script>
