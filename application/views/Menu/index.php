@@ -15,7 +15,7 @@
                         <?= $this->session->flashdata('message'); ?>
                         <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMenu">
                             <i class="material-icons">edit</i>
-                            <small>Tambah Menu</small>
+                            <b>Tambah Menu</b>
                         </button>
                         <table class="table table-hover table-responsive">
                             <thead>
