@@ -14,7 +14,7 @@
                         <?= $this->session->flashdata('message'); ?>
                         <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahAkses">
                             <i class="material-icons">edit</i>
-                            <small>Tambah Menu</small>
+                            <small>Tambah Akses Menu</small>
                         </button>
                         <table class="table table-hover table-responsive">
                             <thead>
@@ -53,11 +53,11 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="tambahAksesLabel">Tambah Hak Akses Baru</h5>
             </div>
-            <form action="<?= base_url('Managemenu'); ?>" method="post">
+            <form action="<?= base_url('Managemenu/useraccess'); ?>" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <select class="form-control" class="menu_id" id="menu_id" name="menu_id">
-                            <option disabled selected>Select Main Menu</option>
+                        <select class="form-control" class="menu_id" id="menu_id" name="level">
+                            <option disabled selected>Select User</option>
                             <?php foreach ($akses as $ak) : ?>
                                 <option value="<?= $ak['id'] ?>"><?= $ak['role'] ?></option>
                             <?php endforeach; ?>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="form-group">
                         <select class="form-control" class="menu_id" id="menu_id" name="menu_id">
-                            <option disabled selected>Select Main Menu</option>
+                            <option disabled selected>Select Menu</option>
                             <?php foreach ($menu as $m) : ?>
                                 <option value="<?= $m['id'] ?>"><?= $m['title'] ?></option>
                             <?php endforeach; ?>

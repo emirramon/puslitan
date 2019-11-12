@@ -33,7 +33,7 @@ class Managemenu extends CI_Controller
             $this->db->insert('user_menu', $data);
             $this->session->set_flashdata('message', '<div class="alert alert-success">
 			<span>
-				<b>Berhasil Menambahkan Menu</span>
+				<b>Berhasil Menambahkan Menu</b></span>
             </div>');
             redirect('Managemenu');
         }
@@ -48,22 +48,38 @@ class Managemenu extends CI_Controller
         $data['menu'] = $this->menu->getMenu();
         $data['akses'] = $this->db->get('user_role')->result_array();
 
+        $this->form_validation->set_rules('level', 'Level', 'required');
+        $this->form_validation->set_rules('menu_id', 'Menu', 'required');
+
         if ($this->form_validation->run() == false) {
             $this->template->load('template/main', 'Menu/useraccess', $data);
         } else {
+            $data = [
+                'level' => $this->input->post('level'),
+                'menu_id' => $this->input->post('menu_id')
+            ];
+            $data2 = $this->db->get('user_access_menu')->result_array();
+            $duplikat = false;
+            foreach ($data2 as $d2) {
 
-            // $data = [
-            //     'title' => $this->input->post('menu'),
-            //     'url' => $this->input->post('url'),
-            //     'icon' => $this->input->post('icon')
-            // ];
-
-            // $this->db->insert('user_menu', $data);
-            // $this->session->set_flashdata('message', '<div class="alert alert-success">
-            // <span>
-            // 	<b>Berhasil Menambahkan Menu</span>
-            // </div>');
-            // redirect('Managemenu');
+                if ($data['level'] == $d2['level'] && $data['menu_id'] == $d2['menu_id']) {
+                    $duplikat = true;
+                }
+            }
+            if ($duplikat == false) {
+                $this->db->insert('user_access_menu', $data);
+                $this->session->set_flashdata('message', '<div class="alert alert-success">
+                <span>
+                    <b>Berhasil Menambahkan Akses Baru</b></span>
+                </div>');
+                redirect('Managemenu/useraccess');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger">
+                <span>
+                    <b>Akses Sudah Ada</b></span>
+                </div>');
+                redirect('Managemenu/useraccess');
+            }
         }
     }
 
@@ -94,7 +110,7 @@ class Managemenu extends CI_Controller
             $this->db->insert('user_sub_menu', $data);
             $this->session->set_flashdata('message', '<div class="alert alert-success">
 			<span>
-				<b>Berhasil Menambahkan Sub Menu</span>
+				<b>Berhasil Menambahkan Sub Menu</b></span>
             </div>');
             redirect('Managemenu/submenu');
         }

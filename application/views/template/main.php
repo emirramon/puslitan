@@ -114,7 +114,6 @@
 						</div>
 					<?php endif; ?>
 
-
 					<ul class="nav">
 						<?php
 							//join tabel user menu dengan user access menu
@@ -313,7 +312,6 @@
 		</footer>
 	</div>
 	</div>
-
 	<!-- Logout Modal -->
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModal" aria-hidden="true">
 		<div class="modal-dialog" role="document">
