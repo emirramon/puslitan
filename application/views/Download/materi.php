@@ -44,12 +44,12 @@
 												<i class="material-icons">cloud_download</i>
 											</a>
 											<?php if ($this->session->userdata('level') == '0') : ?>
-											<button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="<?= $data['id'] ?>" data-judul="<?= $data['judul'] ?>" onclick="editMateri(this.value)">
-												<i class="material-icons">edit</i>
-											</button>
-											<a href="<?= base_url() . 'Download/deleteMateri/' . $data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete">
-												<i class="material-icons">delete_forever</i>
-											</a>
+												<button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="<?= $data['id'] ?>" data-judul="<?= $data['judul'] ?>" onclick="editMateri(this.value)">
+													<i class="material-icons">edit</i>
+												</button>
+												<a href="<?= base_url() . 'Download/deleteMateri/' . $data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete" onClick="if(!confirm(`Apakah Anda Yakin Menghapus <?= $data['judul'] ?> ?`)){return false;}">
+													<i class="material-icons">delete_forever</i>
+												</a>
 											<?php endif; ?>
 										</td>
 								</tr>
@@ -98,7 +98,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-					<button type="submit" class="btn btn-primary">Tambah</button>
+					<button type="submit" class="btn btn-primary" onClick="if(!confirm(`Apakah Data Sudah Benar ?`)){return false;}">Tambah</button>
 				</div>
 			</form>
 		</div>
@@ -108,15 +108,13 @@
 <div id="modalEdit"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
 	function editMateri(val) {
 		var url = 'http://localhost/puslitan/Download/getMateri/' + val;
-		
-		$.post(url, function(r){
+
+		$.post(url, function(r) {
 			var html = `<div class="modal fade" id="editMateri" tabindex="-1" role="dialog" aria-labelledby="editMateriLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
@@ -149,7 +147,7 @@
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-										<button type="submit" class="btn btn-primary">Simpan</button>
+										<button type="submit" class="btn btn-primary"  onClick="if(!confirm('Apakah Data Sudah Benar ?')){return false;}">Simpan</button>
 									</div>
 								</form>
 								</div>
@@ -157,20 +155,20 @@
 						</div>`;
 			document.getElementById("modalEdit").innerHTML = html;
 			$('#editMateri').modal('show');
-			
+
 			getTimepicker();
 			getFormFileSimple();
 		}, 'JSON')
 	}
 
-	function getTimepicker(){
+	function getTimepicker() {
 		$('.datepicker').datetimepicker({
 			defaultDate: new Date(),
 			format: 'YYYY/MM/DD'
 		});
 	}
 
-	function getFormFileSimple(){
+	function getFormFileSimple() {
 		$('.form-file-simple .inputFileVisible').click(function() {
 			$(this).siblings('.inputFileHidden').trigger('click');
 		});
@@ -216,7 +214,7 @@
 			$('#tambahMateri').modal('show');
 		});
 	</script>
-<?php elseif(isset($id_edit)) : ?>
+<?php elseif (isset($id_edit)) : ?>
 	<script>
 		editMateri(<?= $id_edit ?>);
 	</script>
