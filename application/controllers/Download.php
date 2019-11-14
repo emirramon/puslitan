@@ -107,7 +107,16 @@ class Download extends CI_Controller
 			}
 		}
 	}
-	
+
+	public function downloadMateri($file = null)
+	{
+		$this->load->helper('download');
+		if (isset($file)) {
+			force_download('uploads/materi/'.$file, null);
+		}
+		redirect(site_url('Download/materi'));
+	}
+
 	public function deleteMateri($id = null)
 	{
 		if (isset($id)) {
