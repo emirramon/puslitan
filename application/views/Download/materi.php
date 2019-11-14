@@ -16,7 +16,7 @@
 							<i class="material-icons">add</i>
 							<b>Tambah Materi</b>
 						</button>
-						<table  id="datatables" class="table table-hover table-responsive">
+						<table id="datatables" class="table table-hover table-responsive">
 							<thead>
 								<th>No</th>
 								<th>Judul</th>
@@ -40,15 +40,17 @@
 										<td><?= $data['tanggal'] ?></td>
 										<td><?= $data['pemateri'] ?></td>
 										<td class="td-actions">
-											<a rel="tooltip" class="btn btn-info" title="Edit" data-toggle="modal" data-target="#editMateri<?= $data['id'] ?>">
-												<i class="material-icons">edit</i>
-											</a>
-											<a href="<?= base_url().'Download/downloadMateri/'.$data['file']; ?>" rel="tooltip" class="btn btn-primary" title="Download">
+											<a href="<?= base_url() . 'Download/downloadMateri/' . $data['file']; ?>" rel="tooltip" class="btn btn-primary" title="Download">
 												<i class="material-icons">cloud_download</i>
 											</a>
-											<a href="<?= base_url().'Download/deleteMateri/'.$data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete">
+											<?php if ($this->session->userdata('level') == '0') : ?>
+											<button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="<?= $data['id'] ?>" data-judul="<?= $data['judul'] ?>" onclick="editMateri(this.value)">
+												<i class="material-icons">edit</i>
+											</button>
+											<a href="<?= base_url() . 'Download/deleteMateri/' . $data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete">
 												<i class="material-icons">delete_forever</i>
 											</a>
+											<?php endif; ?>
 										</td>
 								</tr>
 								<?php $i++; ?>
@@ -63,8 +65,7 @@
 
 </div>
 
-
-<!-- Modal -->
+<!-- Modal Tambah-->
 <div class="modal fade" id="tambahMateri" tabindex="-1" role="dialog" aria-labelledby="tambahMateriLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -94,14 +95,17 @@
 						<input type="text" name="fileName" class="form-control inputFileVisible" placeholder="Pilih FIle...">
 						<input type="file" name="file" class="inputFileHidden">
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-						<button type="submit" class="btn btn-primary">Tambah</button>
-					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+					<button type="submit" class="btn btn-primary">Tambah</button>
+				</div>
 			</form>
 		</div>
 	</div>
 </div>
+<!-- Modal Edit -->
+<div id="modalEdit"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
@@ -109,12 +113,64 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
-	$(document).ready(function() {
+	function editMateri(val) {
+		var url = 'http://localhost/puslitan/Download/getMateri/' + val;
+		
+		$.post(url, function(r){
+			var html = `<div class="modal fade" id="editMateri" tabindex="-1" role="dialog" aria-labelledby="editMateriLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editMateriLabel">Edit Materi</h5>
+								</div>
+								<form action="<?= base_url('Download/editMateri/`+val+`'); ?>" method="post" enctype="multipart/form-data">
+									<div class="modal-body">
+										<?php echo form_error('judulEdit', '<div class="text-danger">', '</div>'); ?>
+										<div class="form-group label-floating">
+											<label class="control-label">Judul Materi</label>
+											<input type="text" class="form-control" name="judulEdit" value="` + r[0].judul + `">
+										</div>
+										<?php echo form_error('tanggalEdit', '<div class="text-danger">', '</div>'); ?>
+										<div class="form-group label-floating">
+											<label class="control-label">Tanggal</label>
+											<input type="text" class="form-control datepicker" name="tanggalEdit" value="` + r[0].tanggal + `">
+										</div>
+										<?php echo form_error('pemateriEdit', '<div class="text-danger">', '</div>'); ?>
+										<div class="form-group label-floating">
+											<label class="control-label">Pemateri</label>
+											<input type="text" class="form-control" name="pemateriEdit" value="` + r[0].pemateri + `">
+										</div>
+										<?php echo form_error('fileNameEdit', '<div class="text-danger">', '</div>'); ?>
+										<?= $this->session->flashdata('error_file_edit'); ?>
+										<div class="form-group form-file-upload form-file-simple">
+											<input type="text" name="fileNameEdit" class="form-control inputFileVisible" value="` + r[0].file + `" placeholder="Pilih FIle...">
+											<input type="file" name="file" class="inputFileHidden">
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+										<button type="submit" class="btn btn-primary">Simpan</button>
+									</div>
+								</form>
+								</div>
+							</div>
+						</div>`;
+			document.getElementById("modalEdit").innerHTML = html;
+			$('#editMateri').modal('show');
+			
+			getTimepicker();
+			getFormFileSimple();
+		}, 'JSON')
+	}
+
+	function getTimepicker(){
 		$('.datepicker').datetimepicker({
 			defaultDate: new Date(),
 			format: 'YYYY/MM/DD'
 		});
+	}
 
+	function getFormFileSimple(){
 		$('.form-file-simple .inputFileVisible').click(function() {
 			$(this).siblings('.inputFileHidden').trigger('click');
 		});
@@ -123,29 +179,45 @@
 			var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
 			$(this).siblings('.inputFileVisible').val(filename);
 		});
+	}
+
+	$(document).ready(function() {
+		getTimepicker();
+		getFormFileSimple();
 
 		$('#datatables').DataTable({
-            "pagingType": "full_numbers",
-            responsive: true,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Cari Materi",
-            },
-            "columns": [
-                {"orderable": false,"width": "40px","sClass": "text-left"},
-                {},
-                {},
-                {},
-                {"orderable": false,"width": "100px", "sClass": "text-center"},
-            ]
+			"pagingType": "full_numbers",
+			responsive: true,
+			language: {
+				search: "_INPUT_",
+				searchPlaceholder: "Cari Materi",
+			},
+			"columns": [{
+					"orderable": false,
+					"width": "40px",
+					"sClass": "text-left"
+				},
+				{},
+				{},
+				{},
+				{
+					"orderable": false,
+					"width": "100px",
+					"sClass": "text-center"
+				},
+			]
 
-        });
+		});
 	});
 </script>
-<?php if(isset($data_form)): ?>
+<?php if (isset($data_form)) : ?>
 	<script>
 		$(document).ready(function() {
 			$('#tambahMateri').modal('show');
 		});
+	</script>
+<?php elseif(isset($id_edit)) : ?>
+	<script>
+		editMateri(<?= $id_edit ?>);
 	</script>
 <?php endif; ?>
