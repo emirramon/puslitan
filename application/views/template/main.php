@@ -193,7 +193,7 @@
 					<ul class="nav">
 						<li>
 							<a href="http://localhost/puslitan/Auth">
-								<i class="material-icons">home</i>
+								<i class="material-icons">account_box</i>
 								<p>Login</p>
 							</a>
 						</li>
@@ -268,7 +268,7 @@
 											}
 											?>
 
-								<?php endforeach; ?>
+                                <?php endforeach; ?>
 					</ul>
 				<?php endif; ?>
 			</div>
