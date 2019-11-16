@@ -10,12 +10,17 @@ class materi_model extends CI_Model
 
 	public function getOneMateri($id)
 	{
-		return $this->db->from('materi', array("id" => $id))->get()->result_array();
+		return $this->db->from('materi')->where('id', $id)->get()->result_array();
 	}
 
 	public function save($data)
 	{
 		return $this->db->insert('materi', $data);
+	}
+
+	public function edit($data, $id){
+		$this->db->where('id', $id);
+		$this->db->update('materi', $data);
 	}
 
 	public function delete($id){
