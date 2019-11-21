@@ -12,10 +12,12 @@
 					</div>
 					<div class="card-content">
 						<?= $this->session->flashdata('message'); ?>
+						<?php if ($this->session->userdata('level') == '0') : ?>
 						<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMateri">
 							<i class="material-icons">add</i>
 							<b>Tambah Materi</b>
 						</button>
+						<?php endif; ?>
 						<table id="datatables" class="table table-hover table-responsive">
 							<thead>
 								<th>No</th>
