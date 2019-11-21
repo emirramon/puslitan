@@ -13,32 +13,50 @@
                         <?= form_error('menu', '<div class="alert alert-danger">
                             <span><b>', '</span></div>') ?>
                         <?= $this->session->flashdata('message'); ?>
-                        <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMenu">
+                        <!-- <button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMenu">
                             <i class="material-icons">edit</i>
                             <b>Tambah Menu</b>
-                        </button>
+                        </button> -->
                         <table class="table table-hover table-responsive">
                             <thead>
                                 <th>ID</th>
-                                <th>Menu</th>
-                                <th>Controller</th>
-                                <th>Icon</th>
-                                <th>Action</th>
+                                <th>NIP</th>
+                                <th>Nama</th>
+                                <th>Fakultas</th>
+                                <th>Jurusan</th>
+                                <th>Nomor HP</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </thead>
                             <tbody>
                                 <?php $i = 1; ?>
                                 <tr>
-                                    <?php foreach ($menu as $mn) : ?>
+                                    <?php foreach ($fakultas as $f) : ?>
                                         <td class="text-center"><?= $i ?></td>
-                                        <td><?= $mn['title'] ?></td>
-                                        <td><?= $mn['url'] ?></td>
-                                        <td><?= $mn['icon'] ?></td>
+                                        <td><?= $f['nip'] ?></td>
+                                        <td><?= $f['nama'] ?></td>
+                                        <td><?= $f['namafakultas'] ?></td>
+                                        <td>
+                                            <?php
+                                                foreach ($jurusan as $j) {
+                                                    if ($f['jurusan'] == $j['idjurusan']) {
+                                                        echo $j['namajurusan'];
+                                                    }
+                                                }
+                                                ?>
+                                        </td>
+                                        <td><?= $f['nomorhp'] ?></td>
+                                        <td><?php $status = $f['status'];
+                                                if ($status = 1) {
+                                                    echo 'Aktif';
+                                                } else {
+                                                    echo 'Tidak Aktif';
+                                                }
+                                                ?></td>
+
                                         <td class="td-actions">
-                                            <button type="button" rel="tooltip" id="edit" title="Edit" value="" data-judul="" onclick="" class="btn btn-info">
+                                            <button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="" data-judul="" onclick="editMateri(this.value)">
                                                 <i class="material-icons">edit</i>
-                                            </button>
-                                            <button type="button" id="delete" rel="tooltip" title="Delete" value="" data-judul="" onclick="" class="btn btn-danger">
-                                                <i class="material-icons">close</i>
                                             </button>
                                         </td>
                                 </tr>

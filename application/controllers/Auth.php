@@ -101,7 +101,8 @@ class Auth extends CI_Controller
 				'namapemilik' => htmlspecialchars($this->input->post('pemilik', true)),
 				'jabatan' => $this->input->post('jabatan'),
 				'email' => htmlspecialchars($this->input->post('email', true)),
-				'nomorhp' => htmlspecialchars($this->input->post('nohp', true))
+				'nomorhp' => htmlspecialchars($this->input->post('nohp', true)),
+				'status' => 1
 			];
 
 			$data2 = [
