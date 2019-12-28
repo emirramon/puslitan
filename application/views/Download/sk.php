@@ -13,14 +13,14 @@
 					<div class="card-content">
 						
 						<?php if ($this->session->userdata('level') == '0') : ?>
-						<a href="<?= base_url() . 'Download/kategori' ?>" type="button" rel="tooltip" class="btn btn-primary">
-							<i class="material-icons">subdirectory_arrow_right</i>
-							<b>Kelola Kategori</b>
-						</a>
 						<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahSK">
 							<i class="material-icons">add</i>
 							<b>Tambah SK</b>
 						</button>
+						<a href="<?= base_url() . 'Download/kategori' ?>" type="button" rel="tooltip" class="btn btn-primary">
+							<i class="material-icons">subdirectory_arrow_right</i>
+							<b>Kelola Kategori</b>
+						</a>
 						<?php endif; ?>
 						<table id="datatables" class="table table-hover table-responsive">
 							<thead>

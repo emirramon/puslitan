@@ -1,22 +1,20 @@
-<div class="card">
-	<div class="content">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="card card-plain">
-						<div class="card-header card-header-icon" data-background-color="rose">
-							<i class="material-icons">folder</i>
-						</div>
-						<h4 class="card-title"><?= $title ?></h4>
-						<p class="category"><?= $subtitle ?></p>
+<div class="content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header card-header-icon" data-background-color="rose">
+						<i class="material-icons">folder</i>
 					</div>
+					<h4 class="card-title"><?= $title ?></h4>
+					<p class="category"><?= $subtitle ?></p>
 					<div class="card-content">
 						<?= $this->session->flashdata('message'); ?>
 						<?php if ($this->session->userdata('level') == '0') : ?>
-						<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMateri">
-							<i class="material-icons">add</i>
-							<b>Tambah Materi</b>
-						</button>
+							<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMateri">
+								<i class="material-icons">add</i>
+								<b>Tambah Materi</b>
+							</button>
 						<?php endif; ?>
 						<table id="datatables" class="table table-hover table-responsive">
 							<thead>
@@ -76,26 +74,26 @@
 			</div>
 			<form action="<?= base_url('Download/materi'); ?>" method="post" enctype="multipart/form-data">
 				<div class="modal-body">
-					<?php echo form_error('judul', '<div class="text-danger">', '</div>'); ?>
 					<div class="form-group label-floating">
 						<label class="control-label">Judul Materi</label>
 						<input type="text" class="form-control" name="judul" value="<?= isset($data_form['judul']) ? $data_form['judul'] : '' ?>">
+						<?php echo form_error('judul', '<div class="text-danger">', '</div>'); ?>
 					</div>
-					<?php echo form_error('tanggal', '<div class="text-danger">', '</div>'); ?>
 					<div class="form-group label-floating">
 						<label class="control-label">Tanggal</label>
 						<input type="text" class="form-control datepicker" name="tanggal" value="<?= isset($data_form['tanggal']) ? $data_form['tanggal'] : '' ?>">
+						<?php echo form_error('tanggal', '<div class="text-danger">', '</div>'); ?>
 					</div>
-					<?php echo form_error('pemateri', '<div class="text-danger">', '</div>'); ?>
 					<div class="form-group label-floating">
 						<label class="control-label">Pemateri</label>
 						<input type="text" class="form-control" name="pemateri" value="<?= isset($data_form['pemateri']) ? $data_form['pemateri'] : '' ?>">
+						<?php echo form_error('pemateri', '<div class="text-danger">', '</div>'); ?>
 					</div>
-					<?php echo form_error('fileName', '<div class="text-danger">', '</div>'); ?>
-					<?= $this->session->flashdata('error_file'); ?>
 					<div class="form-group form-file-upload form-file-simple">
 						<input type="text" name="fileName" class="form-control inputFileVisible" placeholder="Pilih FIle...">
 						<input type="file" name="file" class="inputFileHidden">
+						<?php echo form_error('fileName', '<div class="text-danger">', '</div>'); ?>
+						<?= $this->session->flashdata('error_file'); ?>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -125,26 +123,26 @@
 								</div>
 								<form action="<?= base_url('Download/editMateri/`+val+`'); ?>" method="post" enctype="multipart/form-data">
 									<div class="modal-body">
-										<?php echo form_error('judulEdit', '<div class="text-danger">', '</div>'); ?>
 										<div class="form-group label-floating">
 											<label class="control-label">Judul Materi</label>
 											<input type="text" class="form-control" name="judulEdit" value="` + r[0].judul + `">
+											<?php echo form_error('judulEdit', '<div class="text-danger">', '</div>'); ?>
 										</div>
-										<?php echo form_error('tanggalEdit', '<div class="text-danger">', '</div>'); ?>
 										<div class="form-group label-floating">
 											<label class="control-label">Tanggal</label>
 											<input type="text" class="form-control datepicker" name="tanggalEdit" value="` + r[0].tanggal + `">
+											<?php echo form_error('tanggalEdit', '<div class="text-danger">', '</div>'); ?>
 										</div>
-										<?php echo form_error('pemateriEdit', '<div class="text-danger">', '</div>'); ?>
 										<div class="form-group label-floating">
 											<label class="control-label">Pemateri</label>
 											<input type="text" class="form-control" name="pemateriEdit" value="` + r[0].pemateri + `">
+											<?php echo form_error('pemateriEdit', '<div class="text-danger">', '</div>'); ?>
 										</div>
-										<?php echo form_error('fileNameEdit', '<div class="text-danger">', '</div>'); ?>
-										<?= $this->session->flashdata('error_file_edit'); ?>
 										<div class="form-group form-file-upload form-file-simple">
 											<input type="text" name="fileNameEdit" class="form-control inputFileVisible" value="` + r[0].file + `" placeholder="Pilih FIle...">
 											<input type="file" name="file" class="inputFileHidden">
+											<?php echo form_error('fileNameEdit', '<div class="text-danger">', '</div>'); ?>
+											<?= $this->session->flashdata('error_file_edit'); ?>
 										</div>
 									</div>
 									<div class="modal-footer">
