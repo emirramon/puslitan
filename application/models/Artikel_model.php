@@ -8,6 +8,11 @@ class Artikel_model extends CI_Model
 		return $this->db->from('artikel')->get()->result_array();
 	}
 
+	public function getArtikelDashboard()
+	{
+		return $this->db->from('artikel')->limit(20)->order_by("tanggal", "desc")->get()->result_array();
+	}
+
 	public function getOneArtikel($id)
 	{
 		return $this->db->from('artikel')->where('id', $id)->get()->result_array();

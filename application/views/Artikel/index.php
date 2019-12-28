@@ -142,7 +142,21 @@
 			language: {
 				search: "_INPUT_",
 				searchPlaceholder: "Cari Artikel",
-			}
+			},
+			"columns": [{
+					"width": "40px",
+				},
+				{},
+				{
+					"width": "100px",
+				},
+				{
+					"orderable": false,
+					"width": "100px",
+					"sClass": "text-center"
+				},
+			]
+
 		});
 	});
 </script>
