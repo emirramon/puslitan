@@ -3,9 +3,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class sk_model extends CI_Model
 {
-	public function getSk()
+	public function __construct()
 	{
-		return $this->db->from('sk')->join('kategori', 'kategori.id_kategori = sk.id_kategori')->get()->result_array();
+		$this->load->database();
+	}
+	
+	public function getSk($id = FALSE)
+	{
+		if($id == FALSE)
+		{
+			return $this->db->from('sk')->join('kategori', 'kategori.id_kategori = sk.id_kategori')->get()->result_array();	
+		}
+		$this->db->select('*');
+		$this->db->from('sk');
+		$this->db->join('kategori', 'kategori.id_kategori = sk.id_kategori');
+		$this->db->where('id', $id);
+		return $this->db->get()->row_array();
+		//return $this->db->from('sk')->where('id', $id)->row_array();
 	}
 
 	public function getKategori()

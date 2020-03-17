@@ -21,42 +21,41 @@ class Download extends CI_Controller
 		$this->form_validation->set_rules('judul', 'Judul', 'required');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'required');
 		$this->form_validation->set_rules('pemateri', 'Pemateri', 'required');
-		$this->form_validation->set_rules('fileName', 'File', 'required');
 		$this->form_validation->set_message('required', '{field} tidak boleh kosong!');
 		if ($this->form_validation->run() == FALSE) {
 			$this->template->load('template/main', 'Download/materi', $data);
 		} else {
-			$config['upload_path'] = './uploads/materi/';
-			$config['allowed_types'] = 'application/pdf|pdf|PDF';
+			// $config['upload_path'] = './uploads/materi/';
+			// $config['allowed_types'] = 'application/pdf|pdf|PDF';
 
-			$this->load->library('upload', $config);
-			if (!$this->upload->do_upload('file')) {
-				$error = $this->upload->display_errors();
-				$this->session->set_flashdata('error_file', '<div class="text-danger">' . $error . '</div>');
-				$this->template->load('template/main', 'Download/materi', $data);
-			} else {
-				$result = $this->upload->data();
-				// echo "<pre>";
-				// print_r($result);
-				// echo "</pre>";
-				$data = [
-					'judul' => $this->input->post('judul'),
-					'tanggal' => $this->input->post('tanggal'),
-					'pemateri' => $this->input->post('pemateri'),
-					'file' => $this->upload->data('file_name')
-				];
-				$this->materi_model->save($data);
-				$this->session->set_flashdata('message', '<div class="alert alert-success">
+			// $this->load->library('upload', $config);
+			// if (!$this->upload->do_upload('file')) {
+			// 	$error = $this->upload->display_errors();
+			// 	$this->session->set_flashdata('error_file', '<div class="text-danger">' . $error . '</div>');
+			// 	$this->template->load('template/main', 'Download/materi', $data);
+			// } else {
+			// 	$result = $this->upload->data();
+			// 	// echo "<pre>";
+			// 	// print_r($result);
+			// 	// echo "</pre>";
+			$data = [
+				'judul' => $this->input->post('judul'),
+				'tanggal' => $this->input->post('tanggal'),
+				'pemateri' => $this->input->post('pemateri'),
+				'linkdrive' => $this->input->post('linkdrive'),
+				// 'file' => $this->upload->data('file_name')
+			];
+			$this->materi_model->save($data);
+			$this->session->set_flashdata('message', '<div class="alert alert-success">
 				<span><b>Berhasil Menambahkan Materi</b></span>
 				</div>');
-				redirect('Download/materi');
-			}
+			redirect('Download/materi');
 		}
 	}
 
 	public function editMateri($id = null)
 	{
-		if(isset($id)){
+		if (isset($id)) {
 
 			$data['title'] = 'Download';
 			$data['subtitle'] = 'Materi';
@@ -66,47 +65,25 @@ class Download extends CI_Controller
 			$this->form_validation->set_rules('judulEdit', 'Judul', 'required');
 			$this->form_validation->set_rules('tanggalEdit', 'Tanggal', 'required');
 			$this->form_validation->set_rules('pemateriEdit', 'Pemateri', 'required');
+			$this->form_validation->set_rules('linkdrive', 'Link GDrive', 'required');
 			$this->form_validation->set_message('required', '{field} tidak boleh kosong!');
 			if ($this->form_validation->run() == FALSE) {
 				$this->template->load('template/main', 'Download/materi', $data);
 			} else {
-				if ($_POST['fileNameEdit'] != '' && $_POST['fileNameEdit'] != $materi[0]['file']) {
-					$config['upload_path'] = './uploads/materi/';
-					$config['allowed_types'] = 'application/pdf|pdf|PDF';
-	
-					$this->load->library('upload', $config);
-					if (!$this->upload->do_upload('file')) {
-						$error = $this->upload->display_errors();
-						$this->session->set_flashdata('error_file_edit', '<div class="text-danger">' . $error . '</div>');
-						$this->template->load('template/main', 'Download/materi', $data);
-					} else {
-						$result = $this->upload->data();
-						$data = [
-							'judul' => $this->input->post('judulEdit'),
-							'tanggal' => $this->input->post('tanggalEdit'),
-							'pemateri' => $this->input->post('pemateriEdit'),
-							'file' => $this->upload->data('file_name')
-						];
-						$this->materi_model->edit($data, $id);
-						$this->session->set_flashdata('message', '<div class="alert alert-success">
-						<span><b>Berhasil Mengubah Materi</b></span>
-						</div>');
-						redirect('Download/materi');
-					}
-				} else {
-					$data = [
-						'judul' => $this->input->post('judulEdit'),
-						'tanggal' => $this->input->post('tanggalEdit'),
-						'pemateri' => $this->input->post('pemateriEdit')
-					];
-					$this->materi_model->edit($data, $id);
-					$this->session->set_flashdata('message', '<div class="alert alert-success">
+
+				$data = [
+					'judul' => $this->input->post('judulEdit'),
+					'tanggal' => $this->input->post('tanggalEdit'),
+					'pemateri' => $this->input->post('pemateriEdit'),
+					'linkdrive' => $this->input->post('linkdrive')
+				];
+				$this->materi_model->edit($data, $id);
+				$this->session->set_flashdata('message', '<div class="alert alert-success">
 					<span><b>Berhasil Mengubah Materi</b></span>
 					</div>');
-					redirect('Download/materi');
-				}
+				redirect('Download/materi');
 			}
-		} else{
+		} else {
 			redirect('Download/materi');
 		}
 	}
@@ -118,6 +95,15 @@ class Download extends CI_Controller
 			force_download('uploads/materi/' . $file, null);
 		}
 		redirect(site_url('Download/materi'));
+	}
+
+	public function downloadsk($file = null)
+	{
+		$this->load->helper('download');
+		if (isset($file)) {
+			force_download('uploads/sk/' . $file, null);
+		}
+		redirect(site_url('Download/sk'));
 	}
 
 	public function deleteMateri($id = null)
@@ -137,14 +123,6 @@ class Download extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function sk()
-	{
-		$data['title'] = 'Download';
-		$data['subtitle'] = 'SK';
-		$data['data_sk'] = $this->sk_model->getSk();
-		$this->template->load('template/main', 'Download/sk', $data);
-	}
-
 	public function kategori()
 	{
 		$data['title'] = 'Download';
@@ -152,6 +130,138 @@ class Download extends CI_Controller
 		$data['data_kategori'] = $this->sk_model->getKategori();
 		$data['data_sub_kategori'] = $this->sk_model->getSubKategori();
 		$this->template->load('template/main', 'Download/kategori', $data);
+	}
+	public function sk()
+	{
+		$data['title'] = 'Download';
+		$data['subtitle'] = 'SK';
+		$data['data_sk'] = $this->sk_model->getSk();
+		//$data['kategori'] = $this->sk_model->getKategori();
+		$this->template->load('template/main', 'Download/sk', $data);
+	}
+
+	public function tambahSK()
+	{
+		$data['title'] = 'Download';
+		$data['subtitle'] = 'SK';
+		$data['data_sk'] = $this->sk_model->getSk();
+		$data['kategori'] = $this->sk_model->getKategori();
+		//$this->template->load('template/main', 'Download/sk', $data);
+		if (isset($_POST['tanggal'])) {
+			$data['data_form'] = $_POST;
+		}
+		$this->form_validation->set_rules('kategorisk', 'Kategori', 'required');
+		$this->form_validation->set_rules('nomorsk', 'Nomor SK', 'required|is_unique[sk.no_sk]');
+		$this->form_validation->set_rules('judulsk', 'Judul SK', 'required');
+		//$this->form_validation->set_rules('file', 'File', 'required');
+		$this->form_validation->set_message('required', '{field} tidak boleh kosong!');
+		if ($this->form_validation->run() == FALSE) {
+			$this->template->load('template/main', 'Download/tambahsk', $data);
+		} else {
+			//print_r($_FILES);
+			//exit;
+			$config['upload_path'] = './uploads/sk/';
+			$config['allowed_types'] = 'application/pdf|pdf|PDF';
+
+			$this->load->library('upload', $config);
+			if (!$this->upload->do_upload('file')) {
+				$error = $this->upload->display_errors();
+				$this->session->set_flashdata('message', '<div class="text-danger">' . $error . '</div>');
+				$this->template->load('template/main', 'Download/tambahsk', $data);
+			} else {
+				$result = $this->upload->data();
+				// echo "<pre>";
+				// print_r($result);
+				// echo "</pre>";
+				$data = [
+					'id_kategori' => $this->input->post('kategorisk'),
+					'no_sk' => $this->input->post('nomorsk'),
+					'tanggal' => date('Y-m-d'),
+					'judul' => $this->input->post('judulsk'),
+					'file' => $this->upload->data('file_name')
+				];
+				$this->sk_model->save($data);
+				$this->session->set_flashdata('message', '<div class="alert alert-success">
+				<span><b>Berhasil Menambahkan SK</b></span>
+				</div>');
+				redirect('Download/sk');
+			}
+		}
+	}
+
+	public function editSK($id)
+	{
+		$data['title'] = 'Download';
+		$data['subtitle'] = 'SK';
+		$data['data_sk'] = $this->sk_model->getSk($id);
+		$data['kategori'] = $this->sk_model->getKategori();
+		//$this->template->load('template/main', 'Download/sk', $data);
+		if (isset($_POST['tanggal'])) {
+			$data['data_form'] = $_POST;
+		}
+		$this->form_validation->set_rules('kategorisk', 'Kategori', 'required');
+		$this->form_validation->set_rules('nomorsk', 'Nomor SK', 'required');
+		$this->form_validation->set_rules('judulsk', 'Judul SK', 'required');
+		//$this->form_validation->set_rules('file', 'File', 'required');
+		$this->form_validation->set_message('required', '{field} tidak boleh kosong!');
+		if ($this->form_validation->run() == FALSE) {
+			$this->template->load('template/main', 'Download/editsk', $data);
+		} else {
+			//print_r($_FILES);
+			//exit;
+			//kalau edit file
+			if ($_FILES['file']['tmp_name'] != '') {
+				$config['upload_path'] = './uploads/sk/';
+				$config['allowed_types'] = 'application/pdf|pdf|PDF';
+
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('file')) {
+					$error = $this->upload->display_errors();
+					$this->session->set_flashdata('message', '<div class="text-danger">' . $error . '</div>');
+					$this->template->load('template/main', 'Download/editsk', $data);
+				} else {
+					$result = $this->upload->data();
+					// echo "<pre>";
+					// print_r($result);
+					// echo "</pre>";
+					$data = [
+						'id_kategori' => $this->input->post('kategorisk'),
+						'no_sk' => $this->input->post('nomorsk'),
+						'tanggal' => date('Y-m-d'),
+						'judul' => $this->input->post('judulsk'),
+						'file' => $this->upload->data('file_name')
+					];
+					$this->sk_model->edit($data, $id);
+					$this->session->set_flashdata('message', '<div class="alert alert-success">
+					<span><b>Berhasil Menambahkan SK</b></span>
+					</div>');
+					redirect('Download/sk');
+				}
+			} else {
+				$data = [
+					'id_kategori' => $this->input->post('kategorisk'),
+					'no_sk' => $this->input->post('nomorsk'),
+					'tanggal' => date('Y-m-d'),
+					'judul' => $this->input->post('judulsk'),
+				];
+				$this->sk_model->edit($data, $id);
+				$this->session->set_flashdata('message', '<div class="alert alert-success">
+				<span><b>Berhasil Menambahkan SK</b></span>
+				</div>');
+				redirect('Download/sk');
+			}
+		}
+	}
+
+	public function deletesk($id = null)
+	{
+		if (isset($id)) {
+			$this->sk_model->delete($id);
+			$this->session->set_flashdata('message', '<div class="alert alert-success">
+				<span><b>Berhasil Menghapus SK</b></span>
+				</div>');
+		}
+		redirect(site_url('Download/sk'));
 	}
 
 	public function tambahKategori()
@@ -178,7 +288,7 @@ class Download extends CI_Controller
 
 	public function editKategori($id = null)
 	{
-		if(isset($id)){
+		if (isset($id)) {
 			$data['title'] = 'Download';
 			$data['subtitle'] = 'SK';
 			$data['data_kategori'] = $this->sk_model->getKategori();
@@ -197,7 +307,7 @@ class Download extends CI_Controller
 				</div>');
 				redirect('Download/kategori');
 			}
-		} else{
+		} else {
 			redirect('Download/kategori');
 		}
 	}
@@ -256,7 +366,7 @@ class Download extends CI_Controller
 		}
 	}
 
-	
+
 	public function getSubKategori($id)
 	{
 		$data = $this->sk_model->getOneSubKategori($id);
@@ -284,5 +394,4 @@ class Download extends CI_Controller
 		}
 		redirect(site_url('Download/kategori'));
 	}
-	
 }

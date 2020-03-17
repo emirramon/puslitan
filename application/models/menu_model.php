@@ -30,4 +30,9 @@ class menu_model extends CI_Model
         //         ";
         return $this->db->query($query)->result_array();
     }
+
+    public function delete($id)
+    {
+        return $this->db->delete('user_access_menu', array("id" => $id));
+    }
 }

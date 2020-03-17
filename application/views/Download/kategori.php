@@ -215,11 +215,11 @@
 													<option disabled>Pilih Kategori</option>
 													<?php
 													foreach ($data_kategori as $list) : ?>`;
-													var select = "";
-													if(<?= $list['id_kategori'] ?> == r[0].id_kategori){
-														select = "selected";
-													}
-			var html = html + 							`<option value="<?= $list['id_kategori'] ?>" ` + select + `><?= $list['nama_kategori'] ?></option>
+			var select = "";
+			if (<?= $list['id_kategori'] ?> == r[0].id_kategori) {
+				select = "selected";
+			}
+			var html = html + `<option value="<?= $list['id_kategori'] ?>" ` + select + `><?= $list['nama_kategori'] ?></option>
 													<?php endforeach ?>
 												</select>
 											</div>

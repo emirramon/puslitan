@@ -31,7 +31,7 @@
                             <tbody>
                                 <?php $i = 1; ?>
                                 <tr>
-                                    <?php foreach ($fakultas as $f) : ?>
+                                    <?php foreach ($akun as $f) : ?>
                                         <td class="text-center"><?= $i ?></td>
                                         <td><?= $f['nip'] ?></td>
                                         <td><?= $f['nama'] ?></td>
@@ -46,8 +46,8 @@
                                                 ?>
                                         </td>
                                         <td><?= $f['nomorhp'] ?></td>
-                                        <td><?php $status = $f['status'];
-                                                if ($status = 1) {
+                                        <td><?php $status = $f['is_active']; //echo $status;
+                                                if ($status == 1) {
                                                     echo 'Aktif';
                                                 } else {
                                                     echo 'Tidak Aktif';
@@ -55,9 +55,9 @@
                                                 ?></td>
 
                                         <td class="td-actions">
-                                            <button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="" data-judul="" onclick="editMateri(this.value)">
+                                            <a href="<?= base_url() ?>Manageakun/editakun/<?= $f['nip'] ?>" id="edit" rel="tooltip" class="btn btn-info" title="Edit">
                                                 <i class="material-icons">edit</i>
-                                            </button>
+                                            </a>
                                         </td>
                                 </tr>
                                 <?php $i++; ?>

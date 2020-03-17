@@ -17,6 +17,18 @@
 	<link href="<?= base_url(); ?>assets/css/demo.css" rel="stylesheet" />
 	<!--     Fonts and icons     -->
 	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+	<style>
+		.gambar-artikel {
+			/* object-fit: scale-down !important; */
+			max-width: 300px !important;
+			max-height: 200px !important;
+		}
+
+		.gambar-utama {
+			max-width: 1280px !important;
+			max-height: 600px !important;
+		}
+	</style>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	</script>
@@ -42,7 +54,7 @@
 				<?php
 				$session = $this->session->userdata('nip');
 				if (!empty($session)) : ?>
-					<?php if ($this->session->userdata('nip') == 'Administrator') : ?>
+					<?php if ($this->session->userdata('nip') == 'Administrator' || $this->session->userdata('nip') == 'Pimpinan') : ?>
 						<div class="user">
 							<div class="photo">
 								<img src="<?= base_url(); ?>assets/img/faces/avatar.jpg" />
@@ -76,14 +88,15 @@
 								<a data-toggle="collapse" href="#collapseExample" class="collapsed">
 									<span>
 										<?php
-												$session = $this->session->userdata('nip');
-												$nama = "SELECT * FROM `DOSEN`
-                                                    WHERE `nip` = $session";
-												$result = $this->db->query($nama)->result_array();
-												foreach ($result as $r) {
-													$nama2 = $r['nama'];
-												} ?>
+										$session = $this->session->userdata('nip');
+										$nama = "SELECT * FROM `DOSEN`
+                                                    WHERE `nip` = '$session'";
+										$result = $this->db->query($nama)->result_array();
+										foreach ($result as $r) {
+											$nama2 = $r['nama'];
+										} ?>
 										<?= $nama2 ?>
+
 										<b class="caret"></b>
 									</span>
 								</a>
@@ -91,15 +104,9 @@
 								<div class="collapse" id="collapseExample">
 									<ul class="nav">
 										<li>
-											<a href="#">
+											<a href="<?= base_url('Profile') ?>">
 												<span class="sidebar-mini">MP</span>
 												<span class="sidebar-normal">My Profile</span>
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<span class="sidebar-mini">EP</span>
-												<span class="sidebar-normal">Edit Profile</span>
 											</a>
 										</li>
 										<li>
@@ -116,31 +123,31 @@
 
 					<ul class="nav">
 						<?php
-							//join tabel user menu dengan user access menu
-							$level = $this->session->userdata('level');
-							if ($level == '') {
-								$level = 2;
-							}
-							$query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
+						//join tabel user menu dengan user access menu
+						$level = $this->session->userdata('level');
+						if ($level == '') {
+							$level = 2;
+						}
+						$query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
                                     FROM `user_menu` JOIN `user_access_menu`
                                     ON `user_menu`.`id` = `user_access_menu`.`menu_id`
                                     WHERE `user_access_menu`.`level` = $level
                                     ORDER BY `user_access_menu`.`menu_id` ASC
                         ";
-							$menu = $this->db->query($query)->result_array();
-							?>
+						$menu = $this->db->query($query)->result_array();
+						?>
 
 						<?php foreach ($menu as $m) : ?>
 
 							<?php
-									$menuid = $m['id'];
-									$querysub = " SELECT * FROM `user_sub_menu`
+							$menuid = $m['id'];
+							$querysub = " SELECT * FROM `user_sub_menu`
                                             WHERE `menu_id` = $menuid
                                             AND `is_active` = 1
                             ";
-									$submenu = $this->db->query($querysub)->result_array();
-									if (count($submenu) > 0) {
-										?>
+							$submenu = $this->db->query($querysub)->result_array();
+							if (count($submenu) > 0) {
+							?>
 								<?php if ($m['title'] == $title) : ?>
 									<li class="active">
 									<?php else : ?>
@@ -170,8 +177,8 @@
 									</div>
 									</li>
 								<?php
-										} else {
-											?>
+							} else {
+								?>
 									<?php if ($m['title'] == $title) : ?>
 										<li class="active">
 										<?php else : ?>
@@ -183,8 +190,8 @@
 										</a>
 										</li>
 									<?php
-											}
-											?>
+								}
+									?>
 
 								<?php endforeach; ?>
 					</ul>
@@ -198,31 +205,31 @@
 							</a>
 						</li>
 						<?php
-							//join tabel user menu dengan user access menu
-							$level = $this->session->userdata('level');
-							if ($level == '') {
-								$level = 2;
-							}
-							$query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
+						//join tabel user menu dengan user access menu
+						$level = $this->session->userdata('level');
+						if ($level == '') {
+							$level = 2;
+						}
+						$query = "SELECT `user_menu`.`id`, `title`,`url`, `icon`
                                     FROM `user_menu` JOIN `user_access_menu`
                                     ON `user_menu`.`id` = `user_access_menu`.`menu_id`
                                     WHERE `user_access_menu`.`level` = $level
                                     ORDER BY `user_access_menu`.`menu_id` ASC
                         ";
-							$menu = $this->db->query($query)->result_array();
-							?>
+						$menu = $this->db->query($query)->result_array();
+						?>
 
 						<?php foreach ($menu as $m) : ?>
 
 							<?php
-									$menuid = $m['id'];
-									$querysub = " SELECT * FROM `user_sub_menu`
+							$menuid = $m['id'];
+							$querysub = " SELECT * FROM `user_sub_menu`
                                             WHERE `menu_id` = $menuid
                                             AND `is_active` = 1
                             ";
-									$submenu = $this->db->query($querysub)->result_array();
-									if (count($submenu) > 0) {
-										?>
+							$submenu = $this->db->query($querysub)->result_array();
+							if (count($submenu) > 0) {
+							?>
 								<?php if ($m['title'] == $title) : ?>
 									<li class="active">
 									<?php else : ?>
@@ -252,8 +259,8 @@
 									</div>
 									</li>
 								<?php
-										} else {
-											?>
+							} else {
+								?>
 									<?php if ($m['title'] == $title) : ?>
 										<li class="active">
 										<?php else : ?>
@@ -265,10 +272,10 @@
 										</a>
 										</li>
 									<?php
-											}
-											?>
+								}
+									?>
 
-                                <?php endforeach; ?>
+								<?php endforeach; ?>
 					</ul>
 				<?php endif; ?>
 			</div>
@@ -370,5 +377,12 @@
 <script src="<?= base_url(); ?>assets/js/material-dashboard.js?v=1.2.0"></script>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?= base_url(); ?>assets/js/demo.js"></script>
+
+<script src="<?= base_url(); ?>assets/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+	$(function() {
+		CKEDITOR.replace('editor');
+	});
+</script>
 
 </html>

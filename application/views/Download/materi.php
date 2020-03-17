@@ -12,10 +12,12 @@
 					</div>
 					<div class="card-content">
 						<?= $this->session->flashdata('message'); ?>
-						<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMateri">
-							<i class="material-icons">add</i>
-							<b>Tambah Materi</b>
-						</button>
+						<?php if ($this->session->userdata('level') == '0') : ?>
+							<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahMateri">
+								<i class="material-icons">add</i>
+								<b>Tambah Materi</b>
+							</button>
+						<?php endif; ?>
 						<table id="datatables" class="table table-hover table-responsive">
 							<thead>
 								<th>No</th>
@@ -40,7 +42,15 @@
 										<td><?= $data['tanggal'] ?></td>
 										<td><?= $data['pemateri'] ?></td>
 										<td class="td-actions">
-											<a href="<?= base_url() . 'Download/downloadMateri/' . $data['file']; ?>" rel="tooltip" class="btn btn-primary" title="Download">
+											<?php
+											$link = $data['linkdrive'];
+											if (!strpos('https://', $link)) {
+												$link = "https://" . $link;
+											} elseif (!strpos('http://', $link)) {
+												$link = "http://" . $link;
+											}
+											?>
+											<a href="<?= $link ?>" target="_blank" rel="tooltip" class="btn btn-primary" title="Download">
 												<i class="material-icons">cloud_download</i>
 											</a>
 											<?php if ($this->session->userdata('level') == '0') : ?>
@@ -91,9 +101,10 @@
 					</div>
 					<?php echo form_error('fileName', '<div class="text-danger">', '</div>'); ?>
 					<?= $this->session->flashdata('error_file'); ?>
-					<div class="form-group form-file-upload form-file-simple">
-						<input type="text" name="fileName" class="form-control inputFileVisible" placeholder="Pilih FIle...">
-						<input type="file" name="file" class="inputFileHidden">
+					<div class="form-group label-floating">
+						<label class="control-label">Link GDrive</label>
+
+						<input type="text" class="form-control" name="linkdrive" value="<?= isset($data_form['linkdrive']) ? $data_form['linkdrive'] : '' ?>">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -140,9 +151,9 @@
 										</div>
 										<?php echo form_error('fileNameEdit', '<div class="text-danger">', '</div>'); ?>
 										<?= $this->session->flashdata('error_file_edit'); ?>
-										<div class="form-group form-file-upload form-file-simple">
-											<input type="text" name="fileNameEdit" class="form-control inputFileVisible" value="` + r[0].file + `" placeholder="Pilih FIle...">
-											<input type="file" name="file" class="inputFileHidden">
+										<div class="form-group label-floating">
+											<label class="control-label">Link GDrive</label>
+											<input type="text" class="form-control" name="linkdrive" value="` + r[0].linkdrive + `" required>
 										</div>
 									</div>
 									<div class="modal-footer">
