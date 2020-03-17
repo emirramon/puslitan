@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class sk_model extends CI_Model
+class Sk_model extends CI_Model
 {
 	public function __construct()
 	{
@@ -29,11 +29,10 @@ class sk_model extends CI_Model
 
 	public function getSubKategori()
 	{
-		// return $this->db->from('sub_kategori')->get()->result_array();
 		return $this->db->from('sub_kategori')->join('kategori', 'kategori.id_kategori = sub_kategori.id_kategori')->get()->result_array();
 	}
 
-	public function getOneSk($id)
+	public function getOneSK($id)
 	{
 		return $this->db->from('sk')->where('id', $id)->get()->result_array();
 	}
@@ -48,7 +47,7 @@ class sk_model extends CI_Model
 		return $this->db->from('sub_kategori')->where('id_sub_kategori', $id)->get()->result_array();
 	}
 
-	public function save($data)
+	public function saveSK($data)
 	{
 		return $this->db->insert('sk', $data);
 	}
@@ -63,7 +62,7 @@ class sk_model extends CI_Model
 		return $this->db->insert('sub_kategori', $data);
 	}
 
-	public function edit($data, $id){
+	public function editSK($data, $id){
 		$this->db->where('id', $id);
 		$this->db->update('sk', $data);
 	}
@@ -78,7 +77,7 @@ class sk_model extends CI_Model
 		$this->db->update('sub_kategori', $data);
 	}
 
-	public function delete($id){
+	public function deleteSK($id){
 		return $this->db->delete('sk', array("id" => $id));
 	}
 

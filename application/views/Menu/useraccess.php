@@ -21,7 +21,6 @@
                                 <th>ID</th>
                                 <th>Level</th>
                                 <th>Hak Akses Menu</th>
-                                <th>Action</th>
                             </thead>
                             <tbody>
                                 <?php $i = 1; ?>
@@ -31,15 +30,10 @@
                                         <td class="text-center"><?= $i ?></td>
                                         <td><?= $l['role'] ?></td>
                                         <td><?php foreach ($menu as $m) :
-                                                if ($m['id'] == $l['menu_id']) {
-                                                    echo $m['title'];
-                                                }
-                                            endforeach; ?></td>
-                                        <td>
-                                            <a href="<?= base_url() . 'Managemenu/deleteakses/' . $l['id']; ?>" rel="tooltip" class="btn btn-danger btn-sm" title="Delete" onClick="if(!confirm(`Apakah Anda Yakin Menghapus Akses Menu ?`)){return false;}">
-                                                <i class="material-icons">delete_forever</i>
-                                            </a>
-                                        </td>
+                                                    if ($m['id'] == $l['menu_id']) {
+                                                        echo $m['title'];
+                                                    }
+                                                endforeach; ?></td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -74,9 +68,7 @@
                             <option disabled selected>Select Menu</option>
                             <?php foreach ($menu as $m) : ?>
                                 <option value="<?= $m['id'] ?>"><?= $m['title'] ?></option>
-
                             <?php endforeach; ?>
-
                         </select>
                     </div>
                 </div>

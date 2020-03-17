@@ -10,90 +10,39 @@ class Managemenu extends CI_Controller
         //     redirect('Home');
         // }
         is_logged_in();
-        $this->load->model('menu_model');
     }
 
     public function index()
     {
-        // $data['title'] = 'Manajemen Akses Menu';
-        // $data['subtitle'] = 'Main Menu';
-        // $data['menu'] = $this->db->get('user_menu')->result_array();
-
-        // $this->form_validation->set_rules('menu', 'Menu', 'required');
-
-        // if ($this->form_validation->run() == false) {
-        //     $this->template->load('template/main', 'Menu/index', $data);
-        // } else {
-
-        //     $data = [
-        //         'title' => $this->input->post('menu'),
-        //         'url' => $this->input->post('url'),
-        //         'icon' => $this->input->post('icon')
-        //     ];
-
-        //     $this->db->insert('user_menu', $data);
-        //     $this->session->set_flashdata('message', '<div class="alert alert-success">
-        // 	<span>
-        // 		<b>Berhasil Menambahkan Menu</b></span>
-        //     </div>');
-        //     redirect('Managemenu');
-
         $data['title'] = 'Manajemen Menu';
-        $data['subtitle'] = '';
-        $this->load->model('menu_model', 'menu');
-        $data['level'] = $this->menu->getuseraccess();
-        $data['menu'] = $this->menu->getMenu();
-        $data['akses'] = $this->db->get('user_role')->result_array();
+        $data['subtitle'] = 'Main Menu';
+        $data['menu'] = $this->db->get('user_menu')->result_array();
 
-        $this->form_validation->set_rules('level', 'Level', 'required');
-        $this->form_validation->set_rules('menu_id', 'Menu', 'required');
+        $this->form_validation->set_rules('menu', 'Menu', 'required');
 
         if ($this->form_validation->run() == false) {
-            $this->template->load('template/main', 'Menu/useraccess', $data);
+            $this->template->load('template/main', 'Menu/index', $data);
         } else {
-            $data = [
-                'level' => $this->input->post('level'),
-                'menu_id' => $this->input->post('menu_id')
-            ];
-            $data2 = $this->db->get('user_access_menu')->result_array();
-            $duplikat = false;
-            foreach ($data2 as $d2) {
 
-                if ($data['level'] == $d2['level'] && $data['menu_id'] == $d2['menu_id']) {
-                    $duplikat = true;
-                }
-            }
-            if ($duplikat == false) {
-                $this->db->insert('user_access_menu', $data);
-                $this->session->set_flashdata('message', '<div class="alert alert-success">
-                <span>
-                    <b>Berhasil Menambahkan Akses Baru</b></span>
-                </div>');
-                redirect('Managemenu/useraccess');
-            } else {
-                $this->session->set_flashdata('message', '<div class="alert alert-danger">
-                <span>
-                    <b>Akses Sudah Ada</b></span>
-                </div>');
-                redirect('Managemenu/useraccess');
-            }
-        }
-    }
-    public function deleteakses($id = null)
-    {
-        if (isset($id)) {
-            $this->menu_model->delete($id);
+            $data = [
+                'title' => $this->input->post('menu'),
+                'url' => $this->input->post('url'),
+                'icon' => $this->input->post('icon')
+            ];
+
+            $this->db->insert('user_menu', $data);
             $this->session->set_flashdata('message', '<div class="alert alert-success">
-				<span><b>Berhasil Menghapus Akses Menu</b></span>
-				</div>');
+			<span>
+				<b>Berhasil Menambahkan Menu</b></span>
+            </div>');
+            redirect('Managemenu');
         }
-        redirect(site_url('Managemenu'));
     }
 
     public function useraccess()
     {
         $data['title'] = 'Manajemen Menu';
-        $data['subtitle'] = '';
+        $data['subtitle'] = 'User Access';
         $this->load->model('menu_model', 'menu');
         $data['level'] = $this->menu->getuseraccess();
         $data['menu'] = $this->menu->getMenu();

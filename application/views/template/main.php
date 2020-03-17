@@ -145,10 +145,14 @@
                                             WHERE `menu_id` = $menuid
                                             AND `is_active` = 1
                             ";
-							$submenu = $this->db->query($querysub)->result_array();
-							if (count($submenu) > 0) {
-							?>
-								<?php if ($m['title'] == $title) : ?>
+									$submenu = $this->db->query($querysub)->result_array();
+									if (count($submenu) > 0) {
+										?>
+								<?php 
+									$expand = "";
+									if ($m['title'] == $title) : 
+										$expand = "in"
+								?>
 									<li class="active">
 									<?php else : ?>
 									<li>
@@ -159,7 +163,7 @@
 											<b class="caret"></b>
 										</p>
 									</a>
-									<div class="collapse" id="<?= $m['url'] ?>">
+									<div class="collapse <?= $expand ?>" id="<?= $m['url'] ?>">
 										<ul class="nav">
 											<?php foreach ($submenu as $sm) : ?>
 												<?php if ($sm['sub_title'] == $subtitle) : ?>
@@ -227,10 +231,14 @@
                                             WHERE `menu_id` = $menuid
                                             AND `is_active` = 1
                             ";
-							$submenu = $this->db->query($querysub)->result_array();
-							if (count($submenu) > 0) {
-							?>
-								<?php if ($m['title'] == $title) : ?>
+									$submenu = $this->db->query($querysub)->result_array();
+									if (count($submenu) > 0) {
+										?>
+								<?php 
+									$expand = "";
+									if ($m['title'] == $title) : 
+										$expand = "in"
+								?>
 									<li class="active">
 									<?php else : ?>
 									<li>
@@ -241,7 +249,7 @@
 											<b class="caret"></b>
 										</p>
 									</a>
-									<div class="collapse" id="<?= $m['url'] ?>">
+									<div class="collapse <?= $expand ?>" id="<?= $m['url'] ?>">
 										<ul class="nav">
 											<?php foreach ($submenu as $sm) : ?>
 												<?php if ($sm['sub_title'] == $subtitle) : ?>

@@ -17,6 +17,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /vendor/
 uploads/materi/*
 !uploads/materi/.gitkeep
+uploads/sk/*
+!uploads/sk/.gitkeep
 
 # IDE Files
 #-------------------------

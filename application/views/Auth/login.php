@@ -37,7 +37,7 @@
 									<button type="submit" name="submit" class="btn btn-rose btn-simple btn-lg">
 										Masuk
 									</button>
-									<a href="<?= site_url('Auth/lupa') ?>" type="submit" name="submit" class="btn btn-rose btn-simple btn-wd btn-lg">
+									<a href="<?= site_url('login/lupa') ?>" type="submit" name="submit" class="btn btn-rose btn-simple btn-wd btn-lg">
 										Lupa Password
 									</a>
 								</div>

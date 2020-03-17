@@ -11,15 +11,16 @@
 					</div>
 					<h4 class="card-title">SK</h4>
 					<div class="card-content">
+						
 						<?php if ($this->session->userdata('level') == '0') : ?>
-							<a href="<?= base_url() . 'Download/kategori' ?>" type="button" rel="tooltip" class="btn btn-primary">
-								<i class="material-icons">subdirectory_arrow_right</i>
-								<b>Kelola Kategori</b>
-							</a>
-							<a href="<?= base_url() . 'Download/tambahsk' ?>" type="button" rel="tooltip" class="btn btn-primary">
-								<i class="material-icons">add</i>
-								<b>Tambah SK</b>
-							</a>
+						<button type="button" rel="tooltip" class="btn btn-success" data-toggle="modal" data-target="#tambahSK">
+							<i class="material-icons">add</i>
+							<b>Tambah SK</b>
+						</button>
+						<a href="<?= base_url() . 'Download/kategori' ?>" type="button" rel="tooltip" class="btn btn-primary">
+							<i class="material-icons">subdirectory_arrow_right</i>
+							<b>Kelola Kategori</b>
+						</a>
 						<?php endif; ?>
 						<table id="datatables" class="table table-hover table-responsive">
 							<thead>
@@ -48,15 +49,14 @@
 										<td><?= $data['judul'] ?></td>
 										<td><?= $data['tanggal'] ?></td>
 										<td class="td-actions">
-											<a href="<?= base_url() . 'Download/downloadsk/' . $data['file']; ?>" rel="tooltip" class="btn btn-primary" title="Download">
+											<a href="<?= base_url() . 'Download/downloadSK/' . $data['file']; ?>" rel="tooltip" class="btn btn-primary" title="Download">
 												<i class="material-icons">cloud_download</i>
 											</a>
-
 											<?php if ($this->session->userdata('level') == '0') : ?>
-												<a href="<?= base_url() . 'Download/editsk/' . $data['id']; ?>" rel="tooltip" class="btn btn-info" title="Edit">
+												<button type="button" id="edit" rel="tooltip" class="btn btn-info" title="Edit" value="<?= $data['id'] ?>" data-judul="<?= $data['judul'] ?>" onclick="editSK(this.value)">
 													<i class="material-icons">edit</i>
-												</a>
-												<a href="<?= base_url() . 'Download/deletesk/' . $data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete" onClick="if(!confirm(`Apakah Anda Yakin Menghapus <?= $data['judul'] ?> ?`)){return false;}">
+												</button>
+												<a href="<?= base_url() . 'Download/deleteSK/' . $data['id']; ?>" rel="tooltip" class="btn btn-danger" title="Delete" onClick="if(!confirm(`Apakah Anda Yakin Menghapus <?= $data['judul'] ?> ?`)){return false;}">
 													<i class="material-icons">delete_forever</i>
 												</a>
 											<?php endif; ?>
@@ -73,36 +73,47 @@
 	</div>
 </div>
 
-<!-- Modal Tambah-->
-<div class="modal fade" id="tambahMateri" tabindex="-1" role="dialog" aria-labelledby="tambahMateriLabel" aria-hidden="true">
+
+<!-- Modal Tambah SK -->
+<div class="modal fade" id="tambahSK" tabindex="-1" role="dialog" aria-labelledby="tambahSKLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="tambahMateriLabel">Tambah Materi Baru</h5>
+				<h5 class="modal-title" id="tambahSKLabel">Tambah SK Baru</h5>
 			</div>
 			<form action="<?= base_url('Download/sk'); ?>" method="post" enctype="multipart/form-data">
 				<div class="modal-body">
+					<?php echo form_error('id_kategori', '<div class="text-danger">', '</div>'); ?>
+					<div class="form-group label-floating">
+						<select class="selectpicker" data-style="select-with-transition" title="Kategori" id="kategori" name="id_kategori">
+							<option disabled>Pilih Kategori</option>
+							<?php
+							foreach ($data_kategori as $list) :
+								$select = "";
+								if (isset($data_form['id_kategori'])) {
+									if ($data_form['id_kategori'] == $list['id_kategori']) {
+										$select = "selected";
+									}
+								}
+								?>
+								<option value="<?= $list['id_kategori'] ?>" <?= $select ?>><?= $list['nama_kategori'] ?></option>
+							<?php endforeach ?>
+						</select>
+					</div>
+					<?php echo form_error('no_sk', '<div class="text-danger">', '</div>'); ?>
+					<div class="form-group label-floating">
+						<label class="control-label">No SK</label>
+						<input type="text" class="form-control" name="no_sk" value="<?= isset($data_form['no_sk']) ? $data_form['no_sk'] : '' ?>">
+					</div>
 					<?php echo form_error('judul', '<div class="text-danger">', '</div>'); ?>
 					<div class="form-group label-floating">
-						<label class="control-label">Kategori</label>
-						<select name="kategorisk" class="form-control" required>
-							<?php foreach ($kategori as $k) {
-							?>
-								<option value="id_kategori"><?= $k['nama_kategori'] ?></option>
-							<?php
-							}
-							?>
-						</select>
+						<label class="control-label">Judul</label>
+						<input type="text" class="form-control" name="judul" value="<?= isset($data_form['judul']) ? $data_form['judul'] : '' ?>">
 					</div>
 					<?php echo form_error('tanggal', '<div class="text-danger">', '</div>'); ?>
 					<div class="form-group label-floating">
-						<label class="control-label">Nomor SK</label>
-						<input type="text" class="form-control datepicker" name="nomorsk" value="">
-					</div>
-					<?php echo form_error('pemateri', '<div class="text-danger">', '</div>'); ?>
-					<div class="form-group label-floating">
-						<label class="control-label">Judul SK</label>
-						<input type="text" class="form-control" name="judulsk" value="">
+						<label class="control-label">Tanggal</label>
+						<input type="text" class="form-control datepicker" name="tanggal" value="<?= isset($data_form['tanggal']) ? $data_form['tanggal'] : '' ?>">
 					</div>
 					<?php echo form_error('fileName', '<div class="text-danger">', '</div>'); ?>
 					<?= $this->session->flashdata('error_file'); ?>
@@ -120,11 +131,90 @@
 	</div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<!-- Modal Edit -->
+<div id="modalEdit"></div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
+	$(document).ready(function() {
+		getTimepicker();
+		getFormFileSimple();
+		$('#datatables').DataTable({
+			"pagingType": "full_numbers",
+			responsive: true,
+			language: {
+				search: "_INPUT_",
+				searchPlaceholder: "Cari Kategori",
+			}
+		});
+	});
+
+	function editSK(val) {
+		var url = 'http://localhost/puslitan/Download/getSK/' + val;
+
+		$.post(url, function(r) {
+			var html = `<div class="modal fade" id="editSK" tabindex="-1" role="dialog" aria-labelledby="editSKLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="editSKLabel">Edit SK</h5>
+									</div>
+									<form action="<?= base_url('Download/editSK/`+val+`'); ?>" method="post" enctype="multipart/form-data">
+										<div class="modal-body">
+											<?php echo form_error('id_kategoriEdit', '<div class="text-danger">', '</div>'); ?>
+											<div class="form-group label-floating">
+												<select class="form-control" data-style="select-with-transition" title="Kategori" id="kategori" name="id_kategoriEdit">
+													<option disabled>Pilih Kategori</option>
+													<?php
+													foreach ($data_kategori as $list) : ?>`;
+														var select = "";
+														if(<?= $list['id_kategori'] ?> == r[0].id_kategori){
+															select = "selected";
+														}
+			var html = html +							`<option value="<?= $list['id_kategori'] ?>" ` + select + `><?= $list['nama_kategori'] ?></option>
+													<?php endforeach ?>
+												</select>
+											</div>
+											<?php echo form_error('no_skEdit', '<div class="text-danger">', '</div>'); ?>
+											<div class="form-group label-floating">
+												<label class="control-label">No SK</label>
+												<input type="text" class="form-control" name="no_skEdit" value="` + r[0].no_sk + `">
+											</div>
+											<?php echo form_error('judulEdit', '<div class="text-danger">', '</div>'); ?>
+											<div class="form-group label-floating">
+												<label class="control-label">Judul</label>
+												<input type="text" class="form-control" name="judulEdit" value="` + r[0].judul + `">
+											</div>
+											<?php echo form_error('tanggalEdit', '<div class="text-danger">', '</div>'); ?>
+											<div class="form-group label-floating">
+												<label class="control-label">Tanggal</label>
+												<input type="text" class="form-control datepicker" name="tanggalEdit" value="` + r[0].tanggal + `">
+											</div>
+											<?php echo form_error('fileNameEdit', '<div class="text-danger">', '</div>'); ?>
+											<?= $this->session->flashdata('error_file'); ?>
+											<div class="form-group form-file-upload form-file-simple">
+												<input type="text" name="fileNameEdit" class="form-control inputFileVisible" value="` + r[0].file + `" placeholder="Pilih FIle...">
+												<input type="file" name="file" class="inputFileHidden">
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+											<button type="submit" class="btn btn-primary" onClick="if(!confirm('Apakah Data Sudah Benar ?')){return false;}">Simpan</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>`;
+
+			document.getElementById("modalEdit").innerHTML = html;
+			$('#editSK').modal('show');
+
+			getTimepicker();
+			getFormFileSimple();
+		}, 'JSON')
+	}
+
 	function getTimepicker() {
 		$('.datepicker').datetimepicker({
 			defaultDate: new Date(),
@@ -142,34 +232,15 @@
 			$(this).siblings('.inputFileVisible').val(filename);
 		});
 	}
-
-	$(document).ready(function() {
-		getTimepicker();
-		getFormFileSimple();
-
-		$('#datatables').DataTable({
-			"pagingType": "full_numbers",
-			responsive: true,
-			language: {
-				search: "_INPUT_",
-				searchPlaceholder: "Cari Materi",
-			},
-			"columns": [{
-					"orderable": false,
-					"width": "40px",
-					"sClass": "text-left"
-				},
-				{},
-				{},
-				{},
-				{},
-				{
-					"orderable": false,
-					"width": "100px",
-					"sClass": "text-center"
-				},
-			]
-
-		});
-	});
 </script>
+<?php if (isset($data_form)) : ?>
+	<script>
+		$(document).ready(function() {
+			$('#tambahSK').modal('show');
+		});
+	</script>
+<?php elseif (isset($id_edit)) : ?>
+	<script>
+		editSK(<?= $id_edit ?>);
+	</script>
+<?php endif; ?>

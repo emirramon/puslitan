@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class menu_model extends CI_Model
+class Menu_model extends CI_Model
 {
     public function getSubmenu()
     {
@@ -29,10 +29,5 @@ class menu_model extends CI_Model
         //           ON `user_access_menu`.`menu_id` = `user_menu`.`id`
         //         ";
         return $this->db->query($query)->result_array();
-    }
-
-    public function delete($id)
-    {
-        return $this->db->delete('user_access_menu', array("id" => $id));
     }
 }
